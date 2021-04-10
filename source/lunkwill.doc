@@ -1,0 +1,8 @@
+21.04.2002  Version auf 1.16 angehoben
+            Laut Quellen kann die Inf-Datei auch Åbergeben
+            werden. Wichtig dabei ist das die Extention 'inf'
+            lautet.
+23.04.2002  Bei free_faq wurden info und key nicht freigegeben.
+            Neues SchlÅsselwort "Mailfinfo:" Der darauffolgende
+            Text wird am Anfang der Mail geschrieben.
+            

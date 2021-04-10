@@ -5,8 +5,8 @@
  *              Abh„ngigkeiten von meiner eigenen Lib entfernt
  */
 
-#define HEXVERSION 0x115
-#define ASCVERSION  "1.15"
+#define HEXVERSION 0x116
+#define ASCVERSION  "1.16"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,7 +31,10 @@ typedef struct _faq
       *betreff2,
       *datei,
       *info,
-      *key;
+      *key,
+/* GS 1.16 Start: */
+			*mailinfo;
+/* End; */
  struct _faq *next;
  int append;
 } FAQ;
@@ -74,10 +77,16 @@ const char *const c_error[] =
 #define KEY_DATEI   4
 #define KEY_INFO    5
 #define KEY_KEY     6
+/* GS 1.16 Start: */
+#define KEY_MAILINFO  7
+/* End; */
 
 const char *const keyword[] =
 {
  "Gruppe:", "Name:", "Von:", "Betreff:", "Datei:", "Info:", "Keyword:",
+/* GS 1.16 Start: */
+ "Mailinfo:",
+/* End; */
  0L
 };
 
@@ -207,6 +216,11 @@ void free_faq(void)
   free(f->betreff1);
   if(f->betreff2) free(f->betreff2);
   free(f->datei);
+/* GS 1.16 Start: */
+  if ( f->info ) free ( f->info );
+  if ( f->key ) free ( f->key );
+  if ( f->mailinfo ) free ( f->mailinfo );
+/* End; */
   fn=f->next;
   free(f);
   f=fn;
@@ -341,6 +355,10 @@ int read_inf(void)
                             break;
           case KEY_KEY:     ret=add_line(line,&f.key);
                             break;
+/* GS 1.16 Start: */
+					case KEY_MAILINFO:ret=add_line(line,&f.mailinfo);
+					                  break;
+/* End; */
          }
          break;
         }
@@ -628,23 +646,39 @@ int work_outfile(void)
 {
  int pm, ret=0, found_faq=FALSE;
  FILE *fh, *out;
+/* GS 1.16 Start: */
+ char out_new[128];
+ FILE *new;
+/* End; */
  FAQ f, *fx;
 
  memset(&f,0,sizeof(FAQ));
  fh=fopen(outfile,"rb");
  if(fh)
  {
+/* GS 1.16 Start: */
+  strcpy( out_new, outfile );
+	same_path( out_new , "outfile.lnk" );
+ 	new = fopen ( out_new, "w" );
+/* End; */
   line_len=256;
   line=malloc(256);
   if(line)
   {
    ret=read_line(fh);
+/* GS 1.16 Start: */
+	 fprintf( new, "%s\n", line);
+/* End; */
    while(ret==0)
    {
     pm=FALSE;
     do
     {
      ret=read_line(fh);
+/* GS 1.16 Start: */
+		 if ( ret == 0)
+			fprintf( new, "%s\n", line);
+/* End; */
      if(line[0]==':') break;
      switch(line[0])
      {
@@ -659,8 +693,7 @@ int work_outfile(void)
       case 'W': ret=add_entry(line,&f.betreff1);
                 break;
      }
-    }
-    while(ret==0 && !pm);
+    } while(ret==0 && !pm);
     found_faq=FALSE;
     if(ret==0 && !pm)
     {
@@ -695,6 +728,9 @@ int work_outfile(void)
         {
          if(line[0]==':') fprintf(out,"%s\n",line+1);
          ret=read_line(fh);
+/* GS 1.16 Start: */
+				 fprintf( new, "%s\n", line);
+/* End; */
         }
         while(ret==0 && line[0]!='#');
         f.gruppe[0]=f.betreff1[0]='\0';
@@ -712,18 +748,29 @@ int work_outfile(void)
       do
       {
        ret=read_line(fh);
+/* GS 1.16 Start: */
+			 if ( ret == 0)
+				fprintf( new, "%s\n", line);
+/* End; */
       }
       while(ret==0 && line[0]!=':');
      }
      do
      {
       ret=read_line(fh);
+/* GS 1.16 Start: */
+			if ( ret == 0)
+				fprintf( new, "%s\n", line);
      }
      while(ret==0 && line[0]==':');
     }
    }
   }
-  else ret=E_MEM;
+  else
+  	ret=E_MEM;
+/* GS 1.16 Start: */
+  fclose ( new );
+/* End; */
   fclose(fh);
  }
  else ret=E_OUTOPEN;
@@ -732,6 +779,11 @@ int work_outfile(void)
  if(f.name) free(f.name);
  if(f.betreff1) free(f.betreff1);
  if(f.betreff2) free(f.betreff2);
+/* GS 1.16 Start: */
+  if ( f.info ) free ( f.info );
+  if ( f.key ) free ( f.key );
+  if ( f.mailinfo ) free ( f.mailinfo );
+/* End; */
  if(ret==-1) ret=0; /* EOF ist ja kein Fehler */
  return(ret);
 }
@@ -754,12 +806,15 @@ int main(int argc,char *argv[])
       testmode=TRUE;
     else if(stricmp(argv[i],"--nolog")==0)
       nolog=TRUE;
-  if(outfile[0]=='\0') ret=E_ARGS;
+  if(outfile[0]=='\0')
+  	ret=E_ARGS;
   else
   {
    ret=0;
-   if(inf_file[0]=='\0') strcpy(inf_file,INF_FILE);
-   if(!fexists(outfile)) ret=E_OUTNF;
+   if(inf_file[0]=='\0')
+   	strcpy(inf_file,INF_FILE);
+   if(!fexists(outfile))
+   	ret=E_OUTNF;
    else if(!fexists(inf_file)) ret=E_INFNF;
    else
    {
