@@ -1,0 +1,399 @@
+                             Anleitung zu
+
+                               Lunkwill
+
+                             Version 1.15
+                              16.11.1997
+
+                                 von
+
+                              Dirk Haun
+                             Europastr. 8
+                           D-64569 Nauheim
+
+                           Dirk Haun @ WI2
+
+
+
+Inhaltsverzeichnis
+==================
+
+ 1  Einleitung
+
+ 2  Bedienung
+    2.1  Installation
+    2.2  Installation fr andere Programme
+    2.3  Die INF-Datei
+    2.4  Beispiel
+    2.5  Testmodus
+    2.6  Das Logfile
+    2.7  Fehlercodes
+
+Anhang
+======
+
+ A  History
+
+ B  Rechtliches
+
+ C  Danksagung
+
+ D  Kontaktadresse
+
+
+
+1  Einleitung
+*************
+
+Lunkwill ist ein Outfile-Filter (nicht nur) fr CAT. Er kann bestimmte
+Mails anhand von Betreff und Absender aus dem Outfile extrahieren und
+in Dateien schreiben.
+
+Gedacht ist dies haupts„chlich fr regelm„ige Postings, also z.B.
+FAQs. Diese Postings drfen auch aus mehreren Mails bestehen, sie
+werden dann trotzdem in nur eine Datei geschrieben (solange sie in
+einem Outfile stehen).
+
+
+
+---
+
+           "There is an answer?" said Fook with breathless excitement.
+                                    "A simple answer?" added Lunkwill.
+
+
+
+2  Bedienung
+************
+
+
+2.1  Installation
+=================
+
+Die Installation als Outfile-Filter in CAT ist einfach: Nach Anwahl
+des Menpunkts "I/O-Filter" sucht man im nun erscheinenden Dialog
+einen freien Slot (im Popup "Filter"). Dann kann man unter "Name"
+einen Namen angeben und mit dem Button "Programm" LUNKWILL.TTP anmel-
+den. Unter "wofr" w„hlt man "fr In-/Outfile". Jetzt noch die Punkte
+"fr Outfile" und "aktiv" ankreuzen und es ist fast geschafft. Als
+letztes mu man in der "Kommandozeile fr Outfile" die Zeichenfolge
+$I$O eingeben (dadurch wird Lunkwill Name und Pfad des Outfile
+mitgeteilt).
+
+Nun sollte man die Einstellungen unbedingt mit dem Menpunkt "Spei-
+chern" sichern. Lunkwill ist jetzt einsatzbereit.
+
+Anmerkung: Statt"fr In-/Outfile" kann man Lunkwill auch unter "nach
+Einsortieren" anmelden. Dies funktioniert aber nur, wenn Sie das Out-
+file nicht von CAT nach dem Einfgen l”schen lassen.
+
+
+2.2  Installation fr andere Programme
+======================================
+
+Lunkwill kann auch mit anderen MausTausch-Programmen verwendet werden.
+Wie das Programm dort zu installieren ist, mssen Sie dann der Anlei-
+tung des jeweiligen Programms entnehmen. Wichtig ist nur, da Lunkwill
+beim Aufruf Name und Pfad des Outfiles bergeben werden.
+
+
+2.3  Die INF-Datei
+==================
+
+Beim Start sucht Lunkwill in aktuellen Verzeichnis (das ist normaler-
+weise das Verzeichnis, in dem auch LUNKWILL.TTP steht) nach einer
+Datei namens LUNKWILL.INF. In dieser Datei steht, welche Gruppen nach
+FAQs und „hnlichen Postings durchsucht werden sollen.
+
+Folgende Angaben ben”tigt Lunkwill: Den Namen der Gruppe, den Absender
+der Mails, den Betreff und den Namen der Datei, in die die Mail oder
+Mails geschrieben werden sollen. Dafr stehen diese Schlsselw”rter
+zur Verfgung:
+
+ Gruppe:  Dies mu immer das erste Schlsselwort sein. Es gibt den
+          Namen der Gruppe an. Die Schreibweise mu dabei exakt der
+          Schreibweise der Gruppe in der Maus entsprechen.
+
+ Von:     Der Absender der Mail, genauer gesagt, seine e-mail-Adresse.
+          Auch hier mu die Schreibweise exakt (d.h. bezglich Gro-/
+          Kleinschreibung und der Leerzeichen) bereinstimmen.
+
+ Name:    Dies ist eine Alternative zu "Von:" fr Postings aus dem
+          Usenet. Dort ist meist zus„tzlich zur e-mail-Adresse noch
+          ein Realname, d.h. der tats„chliche Name des Absenders,
+          angegeben. Diesen k”nnen Sie hier angeben, was insbesondere
+          dann zu empfehlen ist, wenn der Absender von verschiedenen
+          Accounts aus schreibt.
+
+          Es mu immer entweder "Von:" oder "Name:" angegeben werden,
+          nicht beides!
+
+ Betreff: Hier wird der Betreff angegeben. Da dieser oft ein Datum
+          ("FAQ vom Juli") oder eine laufende Nummer ("Teil 1 von 5")
+          enth„lt, k”nnen im Betreff Quantoren (Wildcards) verwendet
+          werden. Neben den bekannten Quantoren `*' und `?' kann auch
+          das sogenannte "Unix-Globbing" verwendet werden: In eckigen
+          Klammern kann eine Liste von zul„ssigen Zeichen angegeben
+          werden.
+
+          Wichtig: Da Sternchen, Fragezeichen und eckige Klammern von
+          Lunkwill interpretiert werden, mssen Sie darauf achten, ob
+          diese Zeichen im Betreff des Postings vorkommen. Wenn ja,
+          mssen Sie diese Zeichen in der Betreff:-Zeile ggfs. durch
+          Fragezeichen ersetzen oder den Betreff mit dem Stern-Quantor
+          entsprechend krzen.
+
+          Es k”nnen maximal zwei Betreff:-Zeilen angegeben werden. Die
+          zweite Zeile wird u.U. ben”tigt, wenn fr die erste Mail ein
+          anderer Betreff als fr folgende Mails verwendet wird (siehe
+          das Beispiel fr die TeX-FAQ).
+
+ Datei:   Hier geben Sie einfach den kompletten Pfad und den Datei-
+          namen der Datei an, in den die Mails geschrieben werden
+          sollen.
+
+ Keyword: Hier kann ein Schlsselwort oder ein Textstck angegeben
+          werden, das in der ersten Mail einer FAQ unbedingt vorkommen
+          mu. Erscheint der Text nicht, wird die FAQ nicht
+          bernommen.
+
+          Hiermit kann verhindert werden, da ein Kommentar, den der
+          FAQ-Autor zu einem sp„teren Zeitpunkt unter dem gleichen
+          Betreff schreibt (etwa in einer Diskussion, die sich an eine
+          FAQ anschliet), von Lunkwill fr ein erneutes Posting der
+          FAQ gehalten wird.
+
+          Wird fr eine FAQ kein Keyword angegeben, dann wird jedes
+          Mal eine neue FAQ-Datei angelegt, wenn Betreff und Absender
+          passen.
+
+ Info:    Hier kann eine optionale Infozeile angegeben werden, die am
+          Anfang der erzeugten FAQ-Datei ausgegeben wird (noch vor dem
+          Inhalt der FAQ).
+
+          Folgende Platzhalter k”nnen in der Infozeile verwendet wer-
+          den:
+
+           %D  wird durch das Datum ersetzt
+
+           %L  wird durch "Lunkwill" und die Versionsnummer ersetzt
+
+           %T  wird durch die Uhrzeit ersetzt
+
+           %Z  fgt einen zus„tzlichen Zeilenvorschub ein (die Info-
+               zeile wird ohnehin mit einem Zeilenvorschub abge-
+               schlossen, mit %Z kann man weitere Zeilenvorschbe -
+               auch innerhalb der Infozeile - erzeugen)
+
+           %%  erzeugt ein Prozentzeichen
+
+          Ein Beispiel fr eine Infozeile finden Sie in der mitge-
+          lieferten LUNKWILL.INF fr die Gemini-FAQ.
+
+
+Anmerkungen
+
+   ù Bei den Schlsselw”rtern wird nicht auf Gro-/Kleinschreibung
+     geachtet, sie mssen aber mit einem Doppelpunkt enden.
+
+   ù Vor und nach einem Schlsselwort drfen beliebige Leerzeichen und
+     Tabs stehen.
+
+   ù Das Argument eines Schlsselworts (also z.B. der Name des Absen-
+     ders bei "Name:") mu in der gleichen Zeile stehen.
+
+   ù Die Reihenfolge der Schlsselw”rter ist beliebig, nur "Gruppe:"
+     mu als erstes Schlsselwort stehen.
+
+   ù Es k”nnen beliebig viele Bl”cke, d.h. Angaben fr zu suchende
+     Mails, angegeben werden. Es sind auch mehrere Bl”cke fr die
+     gleiche Gruppe erlaubt.
+
+   ù Kommentarzeilen beginnen mit dem Zeichen `#', Leerzeilen sind
+     ebenfalls erlaubt.
+
+
+2.4  Beispiel
+=============
+
+Hier ist eine Beispiel-INF-Datei mit Angaben fr einige FAQs. Sie fin-
+den diese Datei auch als LUNKWILL.INF im Archiv.
+
+# @(#)lunkwill.inf, Dirk Haun, 20.07.1996
+#
+Gruppe:  de.comp.text.tex
+Von:     dantefaq@dante.de
+Betreff: TeX, LaTeX, DANTE e.V.: FAQ - Fragen und Antworten (*
+Betreff: [0-9][0-9]: TeX, LaTeX, DANTE e.V.: FAQ - Fragen und Antworten (*
+Datei:   h:\docs\faq\tex.faq
+Keyword: de-tex-faq
+
+Gruppe:  MT.CAT
+Von:     Marcel Sieling @ D
+Betreff: CAT FAQ vom *
+Datei:   h:\docs\faq\cat.faq
+Keyword: CATFAQ.TXT
+
+# Die dreiteilige FAQ von comp.compression[.research]
+# soll auch in drei Teilen gespeichert werden
+#
+Gruppe:  comp.compression.research
+Name:    Jean-loup Gailly
+Betreff: comp.compression Frequently Asked Questions (part 1/*
+Datei:   h:\docs\faq\comp-1.faq
+Keyword: compression-faq
+
+Gruppe:  comp.compression.research
+Name:    Jean-loup Gailly
+Betreff: comp.compression Frequently Asked Questions (part 2/*
+Datei:   h:\docs\faq\comp-2.faq
+Keyword: compression-faq
+
+Gruppe:  comp.compression.research
+Name:    Jean-loup Gailly
+Betreff: comp.compression Frequently Asked Questions (part 3/*
+Datei:   h:\docs\faq\comp-3.faq
+Keyword: compression-faq
+
+
+2.5  Testmodus
+==============
+
+Auer dem Namen des Outfiles kann man Lunkwill in der Kommandozeile
+auch noch den String "--test" (ohne Anfhrungszeichen) bergeben.
+Lunkwill schaltet dann in einen Testmodus, in dem er zwar seine INF-
+Datei liest, das Outfile aber nicht bearbeitet. So kann man die INF-
+Datei leicht auf Fehler berprfen lassen. Sowohl INF-Datei als auch
+Outfile mssen aber vorhanden sein.
+
+
+2.6  Das Logfile
+================
+
+Lunkwill legt in dem Verzeichnis, aus dem er die INF-Datei gelesen
+hat, auch ein Logfile an, in dem er festh„lt, ob und welche FAQs er
+gefunden hat. Wenn ein Fehler auftritt, wird dieser dort ebenfalls
+aufgezeichnet.
+
+Ausnahmen: Wenn die INF-Datei oder das Outfile nicht gefunden wurde
+oder wenn keine Parameter bergeben wurden, gibt Lunkwill nur einen
+Fehlercode an den Aufrufer zurck (dieser steht dann im CAT-Einfge-
+protokoll).
+
+In der Kommandozeile kann auch noch der Schalter "--nolog" (ohne An-
+fhrungszeichen) bergeben werden, dann l”scht Lunkwill das Logfile
+wieder, wenn weder ein Fehler aufgetreten ist, noch eine FAQ gefunden
+wurde.
+
+
+2.7  Fehlercodes
+================
+
+Tritt w„hrend der Abarbeitung des Outfiles ein Fehler auf, so gibt
+Lunkwill einen der folgenden Fehlercodes an den Aufrufer (z.B. CAT)
+zurck:
+
+ Fehler Bedeutung
+-------------------------------------------------------
+    1   Nicht genug Parameter
+    2   Nicht genug Speicher
+    3   Outfile nicht gefunden
+    4   LUNKWILL.INF nicht gefunden
+    5   LUNKWILL.INF konnte nicht ge”ffnet werden
+    6   LUNKWILL.INF enth„lt keine Infos
+    7   Lesefehler in LUNKWILL.INF
+    8   Unbekanntes Schlsselwort
+    9   Schlsselwort ohne Parameter
+   10   Unvollst„ndige Angaben zur FAQ
+   11   Outfile konnte nicht ge”ffnet werden
+   12   Lesefehler im Outfile
+   13   FAQ-Ausgabedatei konnte nicht ge”ffnet werden
+
+Bei Syntaxfehlern in der INF-Datei gibt Lunkwill im Logfile auch noch
+die Zeile an, in der der Fehler gefunden wurd.
+
+
+
+
+A  History
+**********
+
+Version 1.15 vom 16.11.1997
+
+   ù An der Funktionalit„t des Programms hat sich nichts ge„ndert.
+
+   ù Ich habe mich entschlossen, Lunkwill nicht mehr weiterzuent-
+     wickeln und gebe daher nun das Programm samt Sourcen als Public
+     Domain frei.
+
+
+Version 1.13 vom 23.12.1996
+
+   ù Lunkwill kann nun auch den besonderen Fall behandeln, da mehrere
+     Mails mit identischem Absender und Betreff, aber unterschied-
+     lichem Inhalt in getrennte Dateien gespeichert werden sollen.
+     Dazu mu aber fr jede der Mails ein eindeutiges Keyword angege-
+     ben werden.
+
+
+Version 1.10 vom 20.07.1996
+
+   ù neue Schlsselw”rter in der LUNKWILL.INF:
+
+        - mit "Keyword:" kann ein String angegeben werden, der in der
+          FAQ unbedingt auftauchen mu
+
+        - mit "Info:" kann eine Infozeile in die FAQ-Datei geschrieben
+          werden
+
+   ù neuer Schalter --nolog
+
+   ù im Logfile werden der gefundene Betreff und die Datei angegeben,
+     in die die FAQ geschrieben wurde
+
+   ù bei Syntaxfehlern in der INF-Datei wird auch die Zeilennummer
+     angegeben
+
+
+Version 1.00 vom 09.06.1996
+
+   ù erste ”ffentliche Version
+
+
+
+B  Rechtliches
+**************
+
+Lunkwill ist ab der Version 1.15 samt der Sourcen Public Domain. Ein
+jeder darf nun mit dem Programm bzw. Teilen davon tun und lassen was
+er/sie/es will. Have fun.
+
+
+
+C  Danksagung
+*************
+
+Ich m”chte mich bei den Lesern der Mausgruppe MT.CAT fr die angeregte
+und anregende Diskussion bedanken, sowie insbesondere bei Marcel
+"Super!" Sieling, Jens "Noch mehr?" Brggemann und Rainer "An sich
+funktioniert es jetzt" Helfensteller fr Vorschl„ge, Bugreports &
+Testing.
+
+Dirk Haun, 16. November 1997
+
+
+
+D  Kontaktadresse
+*****************
+
+Der Autor dieses Programms ist auf den folgenden Wegen zu erreichen:
+
+     Dirk Haun
+     Europastr. 8
+     D-64569 Nauheim
+
+     e-mail: Dirk Haun @ WI2 (MausNet)
+
+
+
+
